@@ -78,6 +78,10 @@ public class Blocks {
         getPositions((time - startTime)*velocity2);
     }
 
+    private void setPositions2() {
+
+    }
+
     private void setPositions(double interval) {
 
         System.out.println(interval);
