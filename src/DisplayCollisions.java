@@ -35,8 +35,9 @@ public class DisplayCollisions extends JComponent {
         int size2 = blocks.getSize2();
 
         g.setColor(Color.CYAN);
-        g.fillRect((int)blocks.getPosition1() - size1, bottom - size1, size1, size1);
-        g.fillRect((int)blocks.getPosition2(), bottom - size2, size2, size2);
+        int wallAndFirstBlockWidth = 50 + size1;
+        g.fillRect((int)blocks.getPosition1() - size1 + wallAndFirstBlockWidth, bottom - size1, size1, size1);
+        g.fillRect((int)blocks.getPosition2() + wallAndFirstBlockWidth, bottom - size2, size2, size2);
     }
 
     public void paintComponent(Graphics g) {
