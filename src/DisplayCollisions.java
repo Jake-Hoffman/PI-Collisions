@@ -50,7 +50,7 @@ public class DisplayCollisions extends JComponent {
         bg.fillRect(0, 0, 50, windHeigth);
 
         paintBlocks(bg);
-        bg.drawString(blocks.getCounter() + "", 100, 100);
+        bg.drawString(blocks.getNumCollisions() + "", 100, 100);
         bg.drawString(blocks.getPosition1() + "", 100, 113);
         bg.drawString(blocks.getPosition2() + "", 100, 126);
         bg.drawString(String.format("%4.2f", blocks.getTime()), 100, 139);

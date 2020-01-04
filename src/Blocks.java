@@ -1,12 +1,7 @@
 public class Blocks {
 
-    private double time;
-
     private double mass1;
     private double mass2;
-
-    private double velocity1;
-    private double velocity2;
 
     private int size1;
     private int size2;
@@ -17,24 +12,18 @@ public class Blocks {
     private double originalPos1;
     private double originalPos2;
 
-    private double INTERVAL = 1.00/70;
-    private int counter = 0;
+    private int numCollisions = 0;
 
     private double angle;
-    private double timeSlope;
-    private int numCollisions;
 
     private double startTime;
     private double tBounds;
 
-    public Blocks(double mass1, double mass2, double velocity1, double velocity2, int size1, int size2,
+    public Blocks(double mass1, double mass2, int size1, int size2,
                   double position1, double position2) {
 
         this.mass1 = mass1;
         this.mass2 = mass2;
-
-        this.velocity1 = velocity1; //Pixels Per Second
-        this.velocity2 = velocity2; //Pixels Per Second
 
         this.size1 = size1;
         this.size2 = size2;
@@ -42,55 +31,33 @@ public class Blocks {
         this.position1 = position1;
         this.position2 = position2;
 
-        this.originalPos1 = position1;
-        this.originalPos2 = position2;
+        originalPos1 = position1;
+        originalPos2 = position2;
 
-        this.angle = Math.atan(Math.sqrt(mass1/mass2));
-        System.out.println("Angle: " + angle);
+        angle = Math.atan(Math.sqrt(mass1/mass2));
 
-        this.timeSlope = velocity1/velocity2;
-        this.numCollisions = (int)(Math.PI/angle);
-
-        if ((Math.PI/angle) - (int)(Math.PI/angle) == 0) {
-            this.numCollisions--;
-        }
-
-        this.tBounds = getInitialTime();
+        startTime = System.currentTimeMillis()/1000.0;
+        tBounds = originalPos2 * Math.sqrt(mass2);
     }
 
 
     public void step(){
 
-        time = System.currentTimeMillis() / 1000.0;
+        double time = System.currentTimeMillis() / 1000.0;
 
         double animationDuration = 5;
-
         double t = (((animationDuration / 2) - (time - startTime)) / (animationDuration / 2)) * tBounds;
+
+        numCollisions = (int)(angleAtTime(t)/angle);
 
         double[] positions = getPositions(t);
         position1 = positions[0];
         position2 = positions[1];
     }
 
-    private double getInitialTime() {
-
-        double t = 0;
-
-        while (getPositions(t)[1] - (originalPos2) < 1) {
-            System.out.println(getPositions(t)[1]);
-            t++;
-        }
-
-        System.out.println("Initial time: " + t);
-
-        startTime = System.currentTimeMillis()/1000.0;
-
-        return t;
-    }
-
     private double[] getPositions(double t) {
 
-        double[][] positions = CollisionMath.multiplyMatrices(new double[][]{{timeFunction(t), t}}, CollisionMath.getRotationMatrix(-getRotationAngle(t)));
+        double[][] positions = multiplyMatrices(new double[][]{{originalPos1, t}}, getRotationMatrix(-getRotationAngle(t)));
 
         if ((angleAtTime(t) + angle) % (2 * angle) < angle) {
             positions[0][0] = Math.abs(positions[0][0]);
@@ -106,13 +73,9 @@ public class Blocks {
         return (int)((angleAtTime(t) + angle) / (2 * angle)) * (2 * angle);
     }
 
-    private double timeFunction(double t) {
-        return timeSlope * t - timeSlope * originalPos2 + originalPos1;
-    }
-
     private double angleAtTime(double t) {
 
-        double tempAngle = Math.atan(timeFunction(t)/ t);
+        double tempAngle = Math.atan(originalPos1/ t);
 
         if (t == 0) {
             return Math.PI/2;
@@ -123,6 +86,27 @@ public class Blocks {
         } else {
             return tempAngle;
         }
+    }
+
+    public static double[][] getRotationMatrix(double angleRad) {
+        return new double[][]{{Math.cos(angleRad), -Math.sin(angleRad)}, {Math.sin(angleRad), Math.cos(angleRad)}};
+    }
+
+    public static double[][] multiplyMatrices (double[][] m1, double[][] m2) {
+        int r1 = m1.length;
+        int c2 = m2[0].length;
+
+        double[][] m3 = new double[r1][c2];
+
+        for(int xx = 0; xx < r1; xx++) {
+            for (int yy = 0; yy < c2; yy++) {
+                for (int zz = 0; zz < m1[0].length; zz++) {
+                    m3[xx][yy] += m1[xx][zz] * m2[zz][yy];
+                }
+            }
+        }
+
+        return m3;
     }
 
     public double getPosition1() {
@@ -141,16 +125,15 @@ public class Blocks {
         return size2;
     }
 
-    public int getCounter() {
-        return counter;
+    public int getNumCollisions() {
+        return numCollisions;
     }
 
     public double getTime() {
-        return time - startTime;
+        return System.currentTimeMillis() / 1000.0 - startTime;
     }
 
     public String toString() {
-        return ("Time: " + time + "\n" + "Mass 1: " + mass1 + "\n" + "Mass 2: " + mass2 + "\n" + "Vel 1: " + velocity1 + "\n" +
-                "Vel 2: " + velocity2 + "\n" + "Pos 1: " + position1 + "\n" + "Pos 2: " + position2 + "\n");
+        return ("Mass 1: " + mass1 + "\n" + "Mass 2: " + mass2 + "\n" + "Vel 1: " + "\n" + "Pos 1: " + position1 + "\n" + "Pos 2: " + position2 + "\n");
     }
 }
