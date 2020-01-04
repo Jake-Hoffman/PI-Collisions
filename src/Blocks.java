@@ -3,30 +3,23 @@ public class Blocks {
     private double mass1;
     private double mass2;
 
-    private int size1;
-    private int size2;
-
     private double position1;
     private double position2;
 
     private double originalPos1;
     private double originalPos2;
 
-    private int numCollisions = 0;
+    private long numCollisions = 0;
 
     private double angle;
 
     private double startTime;
     private double tBounds;
 
-    public Blocks(double mass1, double mass2, int size1, int size2,
-                  double position1, double position2) {
+    public Blocks(double mass1, double mass2, double position1, double position2) {
 
         this.mass1 = mass1;
         this.mass2 = mass2;
-
-        this.size1 = size1;
-        this.size2 = size2;
 
         this.position1 = position1;
         this.position2 = position2;
@@ -117,20 +110,8 @@ public class Blocks {
         return position2;
     }
 
-    public int getSize1() {
-        return size1;
-    }
-
-    public int getSize2() {
-        return size2;
-    }
-
-    public int getNumCollisions() {
+    public long getNumCollisions() {
         return numCollisions;
-    }
-
-    public double getTime() {
-        return System.currentTimeMillis() / 1000.0 - startTime;
     }
 
     public String toString() {
