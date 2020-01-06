@@ -41,7 +41,7 @@ public class Blocks {
         double animationDuration = 5;
         double t = (((animationDuration / 2) - (time - startTime)) / (animationDuration / 2)) * tBounds;
 
-        numCollisions = (int)(angleAtTime(t)/angle);
+        numCollisions = (long)(angleAtTime(t)/angle);
 
         double[] positions = getPositions(t);
         position1 = positions[0];
