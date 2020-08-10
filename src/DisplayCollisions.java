@@ -4,6 +4,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 
+@SuppressWarnings("serial")
 public class DisplayCollisions extends JComponent {
 
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
